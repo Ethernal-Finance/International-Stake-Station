@@ -1,0 +1,18 @@
+/* FooterNavbar.css */
+.footer-navbar {
+    display: flex;
+    justify-content: center; /* Center the links */
+    padding: 20px;
+    color: white;
+  }
+  
+  .footer-navbar a {
+    color: white; /* White text for links */
+    margin: 0 15px; /* Spacing between links */
+    text-decoration: none; /* No underline */
+  }
+  
+  .footer-navbar a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+  

@@ -1,0 +1,42 @@
+/* CreateStakingRewards.css */
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-field, .submit-button {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .input-field {
+    border: 1px solid #ccc;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive Media Queries */
+  
+  @media (max-width: 768px) {
+    .form-container {
+      width: 95%;
+      margin: 20px auto;
+    }
+  }
+  

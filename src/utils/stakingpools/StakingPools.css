@@ -1,0 +1,96 @@
+.staking-pools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.staking-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+
+.staking-pool-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* background-color: #f9f9f9; */
+}
+
+.staking-pool-item p {
+    margin: 10px 0;
+}
+
+.staking-pool-item a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.staking-pool-item a:hover {
+    text-decoration: underline;
+}
+
+.pool-logo {
+    text-align: center;
+    /* Center the logo image */
+    margin-bottom: 15px;
+    /* Add some space between the logo and the pool details */
+}
+
+.pool-logo img {
+    max-width: 100px;
+    /* Limit logo size for consistency */
+    height: auto;
+    /* Maintain aspect ratio */
+    border-radius: 50%;
+    /* Optional: makes the logo round, remove if not desired */
+}
+
+@media (max-width: 768px) {
+    .staking-pool-item {
+        width: 90%;
+    }
+}
+
+.staking-pools-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.pool-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    max-width: 600px; /* Adjust based on your design */
+}
+
+.pool-cell {
+    flex: 1;
+    padding: 0 10px;
+    text-align: center;
+}
+
+/* Adjusting for mobile screens */
+@media (max-width: 768px) {
+    .pool-row {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .pool-cell {
+        padding: 10px 0;
+    }
+}

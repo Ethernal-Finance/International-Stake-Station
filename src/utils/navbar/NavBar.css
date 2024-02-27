@@ -1,0 +1,35 @@
+/* NavBar.css */
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    display: inline;
+    margin-right: 20px;
+  }
+
+.nav-bar {
+    display: flex;
+    justify-content: space-around; /* Adjust as needed */
+    padding: 10px;
+    background: #33333336;
+    color: white;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-bar {
+      flex-direction: column;
+    }
+  
+    .nav-link {
+      margin: 5px 0;
+    }
+  }
+  
