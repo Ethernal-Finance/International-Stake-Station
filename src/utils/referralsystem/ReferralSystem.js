@@ -67,8 +67,8 @@ function ReferralSystem() {
 
     setIsSubmitting(true);
     try {
-      await contract.methods.createReferralCode(referralCodeInput.trim()).send({ from: account });
-      addToast('Referral code created successfully.', 'success');
+      const receipt = await contract.methods.createReferralCode(referralCodeInput.trim()).send({ from: account });
+      addToast('Referral code created successfully.', 'success', { txHash: receipt.transactionHash });
       setReferralCodeInput('');
       await fetchReferralInfo(account);
     } catch (error) {

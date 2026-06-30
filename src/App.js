@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { Web3Provider } from './context/Web3Context';
+import { PoolProvider } from './context/PoolContext';
 import NetworkBanner from './components/NetworkBanner';
 import ReferralPage from './pages/ReferralPage';
 import CreatePage from './pages/CreatePage';
@@ -17,7 +18,8 @@ function App() {
   return (
     <ToastProvider>
       <Web3Provider>
-        <BrowserRouter>
+        <PoolProvider>
+          <BrowserRouter>
           <div className="app-shell">
             <Header />
             <NetworkBanner />
@@ -33,7 +35,8 @@ function App() {
             </main>
             <Footer />
           </div>
-        </BrowserRouter>
+          </BrowserRouter>
+        </PoolProvider>
       </Web3Provider>
     </ToastProvider>
   );

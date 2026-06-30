@@ -21,6 +21,18 @@
   animation: slideIn 0.25s ease;
 }
 
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.toast-link {
+  color: #fff !important;
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
 .toast-success { background: #198754; }
 .toast-error { background: #dc3545; }
 .toast-warning { background: #cc8800; }

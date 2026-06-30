@@ -7,7 +7,9 @@ Built with React, web3.js, and MetaMask.
 ## Features
 
 - **Browse Pools** — View all active staking pools with countdown timers and token details
-- **Stake & Earn** — Stake tokens, withdraw, and claim rewards from any pool
+- **Stake & Earn** — Stake tokens, withdraw, and claim rewards with correct token decimals
+- **Pool Safety Warnings** — Unverified pool alerts with Polygonscan contract links
+- **Transaction Tracking** — Toast notifications link directly to Polygonscan
 - **Create Pools** — Launch new staking reward pools with optional referral codes
 - **Referral Program** — Create referral codes and track earnings from referred pools
 - **Wallet Integration** — Connect MetaMask with network detection and switching

@@ -66,11 +66,11 @@ function CreateStakingRewards() {
     setIsSubmitting(true);
     try {
       const feeInWei = web3.utils.toWei(rewardTransferFee || '0', 'ether');
-      await contract.methods
+      const receipt = await contract.methods
         .createStakingRewards(stakingToken, rewardToken, feeInWei, name.trim(), link.trim(), referralCode.trim())
         .send({ from: account, value: requiredPayment });
 
-      addToast('Staking pool created successfully.', 'success');
+      addToast('Staking pool created successfully.', 'success', { txHash: receipt.transactionHash });
       resetForm();
     } catch (error) {
       addToast(error.message || 'Failed to create staking pool.', 'error');

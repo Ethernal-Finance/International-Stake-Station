@@ -10,10 +10,10 @@ export function ToastProvider({ children }) {
     setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
 
-  const addToast = useCallback((message, type = 'info') => {
+  const addToast = useCallback((message, type = 'info', options = {}) => {
     const id = Date.now() + Math.random();
-    setToasts((current) => [...current, { id, message, type }]);
-    setTimeout(() => removeToast(id), 5000);
+    setToasts((current) => [...current, { id, message, type, ...options }]);
+    setTimeout(() => removeToast(id), 7000);
   }, [removeToast]);
 
   const value = useMemo(() => ({ addToast }), [addToast]);

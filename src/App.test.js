@@ -17,6 +17,20 @@ jest.mock('./context/Web3Context', () => ({
   }),
 }));
 
+jest.mock('./context/PoolContext', () => ({
+  PoolProvider: ({ children }) => children,
+  usePools: () => ({
+    pools: [],
+    countdowns: {},
+    totalStaked: {},
+    isLoading: false,
+    error: '',
+    fetchPools: jest.fn(),
+    resolvePool: jest.fn(),
+    getPoolFromCache: jest.fn(),
+  }),
+}));
+
 test('renders International Stake Station branding', () => {
   render(<App />);
   expect(screen.getByText(/International Stake Station/i)).toBeInTheDocument();

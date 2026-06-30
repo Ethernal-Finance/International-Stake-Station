@@ -1,0 +1,23 @@
+.trust-warning {
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.trust-warning p {
+  margin: 8px 0;
+  opacity: 0.9;
+}
+
+.trust-warning-compact {
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.trust-warning-compact p {
+  display: none;
+}

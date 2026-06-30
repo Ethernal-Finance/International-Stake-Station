@@ -2,17 +2,22 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import IERC20Abi from '../Blockchain/Abi/IERC20.json';
 import StakingAbi from '../Blockchain/Abi/Staking.json';
+import ExplorerLink from '../components/ExplorerLink';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PageLayout from '../components/PageLayout';
+import TokenAmount from '../components/TokenAmount';
+import TrustWarning from '../components/TrustWarning';
+import { usePools } from '../context/PoolContext';
 import { useToast } from '../context/ToastContext';
 import { useWeb3 } from '../context/Web3Context';
-import { EXPLORER_URL } from '../constants/network';
+import { useTokenMetadata } from '../hooks/useTokenMetadata';
 import { formatCountdown, formatTokenAmount, parseTokenAmount, truncateAddress } from '../utils/format';
 import './PoolDetailPage.css';
 
 function PoolDetailPage() {
   const { address } = useParams();
   const { web3, account, contract, isConnected, isCorrectNetwork } = useWeb3();
+  const { resolvePool } = usePools();
   const { addToast } = useToast();
 
   const [poolMeta, setPoolMeta] = useState(null);
@@ -27,29 +32,29 @@ function PoolDetailPage() {
   const [error, setError] = useState('');
 
   const stakingContract = useMemo(() => {
-    if (!web3 || !address) return null;
+    if (!web3 || !address || !web3.utils.isAddress(address)) return null;
     return new web3.eth.Contract(StakingAbi.abi, address);
   }, [web3, address]);
 
+  const stakingTokenMeta = useTokenMetadata(web3, poolStats?.stakingTokenAddress);
+  const rewardTokenMeta = useTokenMetadata(web3, poolStats?.rewardTokenAddress);
+
   const loadPoolData = useCallback(async () => {
-    if (!contract || !stakingContract) return;
+    if (!contract || !stakingContract || !web3) return;
+
+    if (!web3.utils.isAddress(address)) {
+      setError('Invalid pool address.');
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     setError('');
+
     try {
-      const poolCount = Number(await contract.methods.getStakingRewardsCount().call());
-      let matchedPool = null;
-
-      for (let i = 0; i < poolCount; i += 1) {
-        const pool = await contract.methods.allStakingRewards(i).call();
-        if (pool.contractAddress.toLowerCase() === address.toLowerCase()) {
-          matchedPool = pool;
-          break;
-        }
-      }
-
+      const matchedPool = await resolvePool(address);
       if (!matchedPool) {
-        setError('Staking pool not found.');
+        setError('Staking pool not found or not registered with the factory.');
         return;
       }
 
@@ -69,11 +74,12 @@ function PoolDetailPage() {
       });
 
       if (account) {
+        const tokenContract = new web3.eth.Contract(IERC20Abi.abi, stakingTokenAddress);
         const [stakedBalance, earnedRewards, balance, tokenAllowance] = await Promise.all([
           stakingContract.methods.balanceOf(account).call(),
           stakingContract.methods.earned(account).call(),
-          new web3.eth.Contract(IERC20Abi.abi, stakingTokenAddress).methods.balanceOf(account).call(),
-          new web3.eth.Contract(IERC20Abi.abi, stakingTokenAddress).methods.allowance(account, address).call(),
+          tokenContract.methods.balanceOf(account).call(),
+          tokenContract.methods.allowance(account, address).call(),
         ]);
 
         setUserStats({ stakedBalance, earnedRewards });
@@ -89,30 +95,34 @@ function PoolDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [account, address, contract, stakingContract, web3]);
+  }, [account, address, contract, resolvePool, stakingContract, web3]);
 
   useEffect(() => {
     loadPoolData();
   }, [loadPoolData]);
 
   const needsApproval = useMemo(() => {
-    if (!stakeAmount) return false;
+    if (!stakeAmount || stakingTokenMeta.loading) return false;
     try {
-      const amount = BigInt(parseTokenAmount(stakeAmount));
+      const amount = BigInt(parseTokenAmount(stakeAmount, stakingTokenMeta.decimals));
       return amount > BigInt(allowance || '0');
     } catch {
       return true;
     }
-  }, [allowance, stakeAmount]);
+  }, [allowance, stakeAmount, stakingTokenMeta.decimals, stakingTokenMeta.loading]);
+
+  const showTxToast = (message, receipt) => {
+    addToast(message, 'success', { txHash: receipt?.transactionHash });
+  };
 
   const handleApprove = async () => {
     if (!web3 || !account || !poolStats) return;
     setIsSubmitting(true);
     try {
       const tokenContract = new web3.eth.Contract(IERC20Abi.abi, poolStats.stakingTokenAddress);
-      const amount = parseTokenAmount(stakeAmount || '0');
-      await tokenContract.methods.approve(address, amount).send({ from: account });
-      addToast('Token approval confirmed.', 'success');
+      const amount = parseTokenAmount(stakeAmount || '0', stakingTokenMeta.decimals);
+      const receipt = await tokenContract.methods.approve(address, amount).send({ from: account });
+      showTxToast('Token approval confirmed.', receipt);
       await loadPoolData();
     } catch (submitError) {
       addToast(submitError.message || 'Approval failed.', 'error');
@@ -125,9 +135,9 @@ function PoolDetailPage() {
     if (!account || !stakingContract || !stakeAmount) return;
     setIsSubmitting(true);
     try {
-      const amount = parseTokenAmount(stakeAmount);
-      await stakingContract.methods.stake(amount).send({ from: account });
-      addToast('Stake successful.', 'success');
+      const amount = parseTokenAmount(stakeAmount, stakingTokenMeta.decimals);
+      const receipt = await stakingContract.methods.stake(amount).send({ from: account });
+      showTxToast('Stake successful.', receipt);
       setStakeAmount('');
       await loadPoolData();
     } catch (submitError) {
@@ -141,9 +151,9 @@ function PoolDetailPage() {
     if (!account || !stakingContract || !withdrawAmount) return;
     setIsSubmitting(true);
     try {
-      const amount = parseTokenAmount(withdrawAmount);
-      await stakingContract.methods.withdraw(amount).send({ from: account });
-      addToast('Withdrawal successful.', 'success');
+      const amount = parseTokenAmount(withdrawAmount, stakingTokenMeta.decimals);
+      const receipt = await stakingContract.methods.withdraw(amount).send({ from: account });
+      showTxToast('Withdrawal successful.', receipt);
       setWithdrawAmount('');
       await loadPoolData();
     } catch (submitError) {
@@ -157,14 +167,24 @@ function PoolDetailPage() {
     if (!account || !stakingContract) return;
     setIsSubmitting(true);
     try {
-      await stakingContract.methods.getReward().send({ from: account });
-      addToast('Rewards claimed successfully.', 'success');
+      const receipt = await stakingContract.methods.getReward().send({ from: account });
+      showTxToast('Rewards claimed successfully.', receipt);
       await loadPoolData();
     } catch (submitError) {
       addToast(submitError.message || 'Claim failed.', 'error');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const setMaxStake = () => {
+    if (!walletBalance || stakingTokenMeta.loading) return;
+    setStakeAmount(formatTokenAmount(walletBalance, stakingTokenMeta.decimals, 8));
+  };
+
+  const setMaxWithdraw = () => {
+    if (!userStats?.stakedBalance || stakingTokenMeta.loading) return;
+    setWithdrawAmount(formatTokenAmount(userStats.stakedBalance, stakingTokenMeta.decimals, 8));
   };
 
   if (isLoading) {
@@ -191,15 +211,27 @@ function PoolDetailPage() {
   return (
     <PageLayout
       title={poolMeta.name || 'Staking Pool'}
-      subtitle={`Contract: ${truncateAddress(address, 8)}`}
+      subtitle={
+        <>
+          Contract: <ExplorerLink type="address" value={address} label={truncateAddress(address, 8)} />
+        </>
+      }
     >
+      <TrustWarning poolAddress={address} />
+
       <div className="pool-detail-grid">
         <section className="detail-card">
           <h3>Pool Overview</h3>
           <ul>
             <li>
               <span>Total Staked</span>
-              <strong>{formatTokenAmount(poolStats.totalSupply)}</strong>
+              <strong>
+                <TokenAmount
+                  web3={web3}
+                  tokenAddress={poolStats.stakingTokenAddress}
+                  amount={poolStats.totalSupply}
+                />
+              </strong>
             </li>
             <li>
               <span>Time Remaining</span>
@@ -214,23 +246,15 @@ function PoolDetailPage() {
             </li>
             <li>
               <span>Staking Token</span>
-              <a
-                href={`${EXPLORER_URL}/address/${poolStats.stakingTokenAddress}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {truncateAddress(poolStats.stakingTokenAddress, 6)}
-              </a>
+              <ExplorerLink type="address" value={poolStats.stakingTokenAddress} />
             </li>
             <li>
               <span>Reward Token</span>
-              <a
-                href={`${EXPLORER_URL}/address/${poolStats.rewardTokenAddress}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {truncateAddress(poolStats.rewardTokenAddress, 6)}
-              </a>
+              <ExplorerLink type="address" value={poolStats.rewardTokenAddress} />
+            </li>
+            <li>
+              <span>Pool Owner</span>
+              <ExplorerLink type="address" value={poolMeta.owner} />
             </li>
           </ul>
         </section>
@@ -246,30 +270,43 @@ function PoolDetailPage() {
               <ul>
                 <li>
                   <span>Wallet Balance</span>
-                  <strong>{formatTokenAmount(walletBalance)}</strong>
+                  <strong>
+                    {formatTokenAmount(walletBalance, stakingTokenMeta.decimals)} {stakingTokenMeta.symbol}
+                  </strong>
                 </li>
                 <li>
                   <span>Staked</span>
-                  <strong>{formatTokenAmount(userStats?.stakedBalance || '0')}</strong>
+                  <strong>
+                    {formatTokenAmount(userStats?.stakedBalance || '0', stakingTokenMeta.decimals)}{' '}
+                    {stakingTokenMeta.symbol}
+                  </strong>
                 </li>
                 <li>
                   <span>Pending Rewards</span>
-                  <strong>{formatTokenAmount(userStats?.earnedRewards || '0')}</strong>
+                  <strong>
+                    {formatTokenAmount(userStats?.earnedRewards || '0', rewardTokenMeta.decimals)}{' '}
+                    {rewardTokenMeta.symbol}
+                  </strong>
                 </li>
               </ul>
 
               <div className="action-group">
-                <label htmlFor="stake-amount">Stake Amount</label>
-                <input
-                  id="stake-amount"
-                  type="number"
-                  min="0"
-                  step="any"
-                  value={stakeAmount}
-                  onChange={(event) => setStakeAmount(event.target.value)}
-                  placeholder="0.0"
-                  disabled={isSubmitting}
-                />
+                <label htmlFor="stake-amount">Stake Amount ({stakingTokenMeta.symbol})</label>
+                <div className="input-with-max">
+                  <input
+                    id="stake-amount"
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={stakeAmount}
+                    onChange={(event) => setStakeAmount(event.target.value)}
+                    placeholder="0.0"
+                    disabled={isSubmitting}
+                  />
+                  <button type="button" className="max-button" onClick={setMaxStake} disabled={isSubmitting}>
+                    Max
+                  </button>
+                </div>
                 <div className="action-buttons">
                   {needsApproval ? (
                     <button type="button" onClick={handleApprove} disabled={isSubmitting || !stakeAmount}>
@@ -284,17 +321,22 @@ function PoolDetailPage() {
               </div>
 
               <div className="action-group">
-                <label htmlFor="withdraw-amount">Withdraw Amount</label>
-                <input
-                  id="withdraw-amount"
-                  type="number"
-                  min="0"
-                  step="any"
-                  value={withdrawAmount}
-                  onChange={(event) => setWithdrawAmount(event.target.value)}
-                  placeholder="0.0"
-                  disabled={isSubmitting}
-                />
+                <label htmlFor="withdraw-amount">Withdraw Amount ({stakingTokenMeta.symbol})</label>
+                <div className="input-with-max">
+                  <input
+                    id="withdraw-amount"
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={withdrawAmount}
+                    onChange={(event) => setWithdrawAmount(event.target.value)}
+                    placeholder="0.0"
+                    disabled={isSubmitting}
+                  />
+                  <button type="button" className="max-button" onClick={setMaxWithdraw} disabled={isSubmitting}>
+                    Max
+                  </button>
+                </div>
                 <div className="action-buttons">
                   <button type="button" onClick={handleWithdraw} disabled={isSubmitting || !withdrawAmount}>
                     Withdraw
