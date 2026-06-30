@@ -1,0 +1,16 @@
+.verification-banner {
+  background: rgba(220, 53, 69, 0.18);
+  border-bottom: 1px solid rgba(220, 53, 69, 0.45);
+  padding: 12px 20px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.verification-banner p {
+  margin: 6px 0 10px;
+  opacity: 0.9;
+}
+
+.verification-banner a {
+  color: #ffb4b4;
+}

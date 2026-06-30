@@ -1,0 +1,25 @@
+.wallet-button {
+  background: linear-gradient(135deg, #6f42c1, #4a2d91);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.wallet-button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.wallet-button:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.wallet-button-disabled {
+  display: inline-block;
+}

@@ -1,0 +1,13 @@
+.explorer-link {
+  color: #c9b8ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.explorer-link:hover {
+  color: #e2d9ff;
+}
+
+.explorer-link-inline {
+  font-weight: 600;
+}

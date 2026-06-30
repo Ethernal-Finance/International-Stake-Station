@@ -1,16 +1,29 @@
-// NavBar.js
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './NavBar.css'; // Make sure the path is correct
+import { Link, useLocation } from 'react-router-dom';
+import './NavBar.css';
+
+const NAV_ITEMS = [
+  { to: '/', label: 'Pools' },
+  { to: '/create', label: 'Create Pool' },
+  { to: '/referral', label: 'Referrals' },
+];
 
 function NavBar() {
+  const location = useLocation();
+
   return (
-    <nav className="nav-bar"> {/* Updated to use nav-bar class */}
+    <nav className="nav-bar">
       <ul>
-        {/* Added nav-link class to each Link component */}
-        <li><Link className="nav-link" to="/">Home</Link></li>
-        <li><Link className="nav-link" to="/create">Create Pool</Link></li>
-        <li><Link className="nav-link" to="/referral">Referral</Link></li>
+        {NAV_ITEMS.map(({ to, label }) => (
+          <li key={to}>
+            <Link
+              className={`nav-link${location.pathname === to ? ' active' : ''}`}
+              to={to}
+            >
+              {label}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

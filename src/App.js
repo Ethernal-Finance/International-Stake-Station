@@ -1,34 +1,46 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ReferralPage from './pages/ReferralPage.js';
-import CreatePage from './pages/CreatePage.js';
-import NavBar from './utils/navbar/NavBar.js';
-import Header from './utils/header/Header.js';
-import Footer from './utils/footer/Footer.js';
-import './App.css'
-import DisclaimerPage from './pages/DisclaimerPage.js';
-import AllPoolsPage from './pages/AllPoolsPage.js';
+import { ToastProvider } from './context/ToastContext';
+import { Web3Provider } from './context/Web3Context';
+import { PoolProvider } from './context/PoolContext';
+import NetworkBanner from './components/NetworkBanner';
+import ContractVerificationBanner from './components/ContractVerificationBanner';
+import ReferralPage from './pages/ReferralPage';
+import CreatePage from './pages/CreatePage';
+import NavBar from './utils/navbar/NavBar';
+import Header from './utils/header/Header';
+import Footer from './utils/footer/Footer';
+import DisclaimerPage from './pages/DisclaimerPage';
+import AllPoolsPage from './pages/AllPoolsPage';
+import PoolDetailPage from './pages/PoolDetailPage';
+import './App.css';
 
 function App() {
   return (
-  
-    <BrowserRouter> 
-    <Header/>
-    <NavBar />
-     <div className='App-Container'>
-     
-      
-        <Routes>
-          <Route path="/" element={<AllPoolsPage />} />
-          <Route path="create" element={<CreatePage />} />
-          <Route path="referral" element={<ReferralPage />} />
-          <Route path="disclaimer" element={<DisclaimerPage />} />
-        </Routes>
-      </div>
-
-    <Footer/>
-    </BrowserRouter>
-    
+    <ToastProvider>
+      <Web3Provider>
+        <PoolProvider>
+          <BrowserRouter>
+          <div className="app-shell">
+            <Header />
+            <ContractVerificationBanner />
+            <NetworkBanner />
+            <NavBar />
+            <main className="App-Container">
+              <Routes>
+                <Route path="/" element={<AllPoolsPage />} />
+                <Route path="/pool/:address" element={<PoolDetailPage />} />
+                <Route path="/create" element={<CreatePage />} />
+                <Route path="/referral" element={<ReferralPage />} />
+                <Route path="/disclaimer" element={<DisclaimerPage />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+          </BrowserRouter>
+        </PoolProvider>
+      </Web3Provider>
+    </ToastProvider>
   );
 }
 

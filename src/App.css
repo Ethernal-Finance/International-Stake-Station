@@ -1,44 +1,34 @@
 body,
-html {
+html,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  background-image: linear-gradient(
-  to right, 
-  rgba(69, 52, 221, 0.637), 
-  rgba(65, 10, 168, 0.219)
-);
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(135deg, rgba(69, 52, 221, 0.85), rgba(65, 10, 168, 0.55));
   color: white;
 }
 
-#app {
+.app-shell {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 .App-Container {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  justify-content: center;
-
+  flex: 1;
+  width: 100%;
 }
 
 .disclaimer-page {
-  padding: 20px;
-  line-height: 1.6;
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.7;
 }
 
-.disclaimer-page h2, .disclaimer-page h3 {
-  margin-top: 20px;
-}
-.staking-pools-page{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: center;
-  justify-content: flex-start;
-  align-items: center;
+.disclaimer-page h3 {
+  margin-top: 24px;
 }
