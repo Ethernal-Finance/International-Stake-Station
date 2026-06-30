@@ -77,6 +77,19 @@ src/
 4. Use **Create Pool** to deploy a new staking rewards contract
 5. Use **Referrals** to create a referral code and track earnings
 
+## Smart Contracts
+
+Reference implementations and security review live in:
+
+- [`contracts/`](contracts/) — Foundry project with Factory + StakingRewards source and tests
+- [`docs/CONTRACT_SECURITY.md`](docs/CONTRACT_SECURITY.md) — Full security audit and required actions
+
+**⚠️ The deployed Factory on Polygon is currently unverified on Polygonscan.** Run `forge test` in `contracts/` to validate the reference implementation.
+
+```bash
+cd contracts && forge test
+```
+
 ## Disclaimer
 
 This application interacts with smart contracts on a public blockchain. Use at your own risk.

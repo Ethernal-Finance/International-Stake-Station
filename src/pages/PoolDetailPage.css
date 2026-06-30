@@ -104,3 +104,19 @@
 .back-link {
   display: inline-block;
 }
+
+.safety-list {
+  margin: 0 0 16px;
+  padding: 12px 16px 12px 32px;
+  border-radius: 12px;
+}
+
+.safety-blockers {
+  background: rgba(220, 53, 69, 0.15);
+  border: 1px solid rgba(220, 53, 69, 0.4);
+}
+
+.safety-warnings {
+  background: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.35);
+}

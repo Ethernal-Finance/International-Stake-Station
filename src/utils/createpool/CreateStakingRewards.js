@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useWeb3 } from '../../context/Web3Context';
 import { useToast } from '../../context/ToastContext';
 import { formatTokenAmount } from '../../utils/format';
+import { validateCreatePoolInputs } from '../../utils/contractSafety';
 import './CreateStakingRewards.css';
 
 function CreateStakingRewards() {
@@ -60,6 +61,12 @@ function CreateStakingRewards() {
 
     if (!name.trim()) {
       addToast('Pool name is required.', 'error');
+      return;
+    }
+
+    const blockers = await validateCreatePoolInputs(web3, stakingToken, rewardToken);
+    if (blockers.length) {
+      addToast(blockers[0], 'error');
       return;
     }
 

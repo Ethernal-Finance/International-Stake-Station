@@ -12,6 +12,7 @@ import { useToast } from '../context/ToastContext';
 import { useWeb3 } from '../context/Web3Context';
 import { useTokenMetadata } from '../hooks/useTokenMetadata';
 import { formatCountdown, formatTokenAmount, parseTokenAmount, truncateAddress } from '../utils/format';
+import { validatePoolSafety } from '../utils/contractSafety';
 import './PoolDetailPage.css';
 
 function PoolDetailPage() {
@@ -30,6 +31,7 @@ function PoolDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [safety, setSafety] = useState({ warnings: [], blockers: [], canInteract: true });
 
   const stakingContract = useMemo(() => {
     if (!web3 || !address || !web3.utils.isAddress(address)) return null;
@@ -90,6 +92,9 @@ function PoolDetailPage() {
         setWalletBalance('0');
         setAllowance('0');
       }
+
+      const safetyResult = await validatePoolSafety(web3, contract, address, account);
+      setSafety(safetyResult);
     } catch (loadError) {
       setError(loadError.message || 'Failed to load pool details.');
     } finally {
@@ -219,6 +224,21 @@ function PoolDetailPage() {
     >
       <TrustWarning poolAddress={address} />
 
+      {safety.blockers.length > 0 && (
+        <ul className="safety-list safety-blockers">
+          {safety.blockers.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      )}
+      {safety.warnings.length > 0 && (
+        <ul className="safety-list safety-warnings">
+          {safety.warnings.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      )}
+
       <div className="pool-detail-grid">
         <section className="detail-card">
           <h3>Pool Overview</h3>
@@ -265,6 +285,8 @@ function PoolDetailPage() {
             <p className="hint-text">Connect your wallet to stake, withdraw, or claim rewards.</p>
           ) : !isCorrectNetwork ? (
             <p className="hint-text">Switch to Polygon Mainnet to interact with this pool.</p>
+          ) : !safety.canInteract ? (
+            <p className="hint-text">This pool failed safety checks and cannot be used.</p>
           ) : (
             <>
               <ul>

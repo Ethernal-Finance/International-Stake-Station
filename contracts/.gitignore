@@ -1,0 +1,6 @@
+cache/
+out/
+broadcast/
+
+# Foundry dependencies — install with: forge install foundry-rs/forge-std
+lib/

@@ -4,6 +4,7 @@ import { ToastProvider } from './context/ToastContext';
 import { Web3Provider } from './context/Web3Context';
 import { PoolProvider } from './context/PoolContext';
 import NetworkBanner from './components/NetworkBanner';
+import ContractVerificationBanner from './components/ContractVerificationBanner';
 import ReferralPage from './pages/ReferralPage';
 import CreatePage from './pages/CreatePage';
 import NavBar from './utils/navbar/NavBar';
@@ -22,6 +23,7 @@ function App() {
           <BrowserRouter>
           <div className="app-shell">
             <Header />
+            <ContractVerificationBanner />
             <NetworkBanner />
             <NavBar />
             <main className="App-Container">

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
+jest.mock('./components/ContractVerificationBanner', () => () => null);
+
 jest.mock('./context/Web3Context', () => ({
   Web3Provider: ({ children }) => children,
   useWeb3: () => ({
