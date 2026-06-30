@@ -1,0 +1,86 @@
+.pool-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.detail-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.detail-card h3 {
+  margin-top: 0;
+}
+
+.detail-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.detail-card li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-card li span {
+  opacity: 0.75;
+}
+
+.detail-card a {
+  color: #c9b8ff;
+}
+
+.action-group {
+  margin-top: 16px;
+}
+
+.action-group label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.action-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.action-buttons button,
+.back-link {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(135deg, #6f42c1, #4a2d91);
+}
+
+.hint-text,
+.pool-detail-empty {
+  opacity: 0.85;
+}
+
+.back-link {
+  display: inline-block;
+}

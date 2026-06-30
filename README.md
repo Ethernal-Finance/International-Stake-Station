@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# International Stake Station
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A production-ready Web3 staking dApp for browsing, creating, and interacting with staking pools on **Polygon Mainnet**.
 
-## Available Scripts
+Built with React, web3.js, and MetaMask.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Browse Pools** — View all active staking pools with countdown timers and token details
+- **Stake & Earn** — Stake tokens, withdraw, and claim rewards from any pool
+- **Create Pools** — Launch new staking reward pools with optional referral codes
+- **Referral Program** — Create referral codes and track earnings from referred pools
+- **Wallet Integration** — Connect MetaMask with network detection and switching
+- **Transaction Feedback** — Toast notifications for wallet and on-chain actions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Network
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Property | Value |
+|----------|-------|
+| Chain | Polygon Mainnet |
+| Chain ID | 137 |
+| Factory Contract | `0x682Ca32c82BCF42F2275068B2f03854E8203D768` |
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- [Node.js](https://nodejs.org/) 18+
+- [MetaMask](https://metamask.io/) browser extension
+- Polygon Mainnet configured in MetaMask
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Development
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Production Build
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Tests
 
-## Learn More
+```bash
+npm test
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+src/
+├── components/       # Shared UI (wallet button, toasts, loading)
+├── context/          # Web3 and toast providers
+├── pages/            # Route-level pages
+├── utils/            # Feature modules (pools, referrals, create)
+├── constants/        # Network configuration
+└── Blockchain/Abi/   # Smart contract ABIs
+```
 
-### Code Splitting
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Connect your MetaMask wallet using the button in the header
+2. Switch to Polygon Mainnet if prompted
+3. Browse pools on the home page and click **View Pool** to stake
+4. Use **Create Pool** to deploy a new staking rewards contract
+5. Use **Referrals** to create a referral code and track earnings
 
-### Analyzing the Bundle Size
+## Disclaimer
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This application interacts with smart contracts on a public blockchain. Use at your own risk.
+See the in-app [Disclaimer](/disclaimer) page for full terms.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Private — © Modularity
